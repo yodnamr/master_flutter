@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/configs/app_route.dart';
+import 'package:my_stock/src/pages/login/background_theme.dart';
+import 'package:my_stock/src/view_models/menu_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,21 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          children: [
-            Spacer(),
-            ListTile(
-              onTap: (){
-                Navigator
-                    .pushNamedAndRemoveUntil(context, AppRoute.loginRoute, (route) => false);
-              },
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Logout'),
-            ),
-          ],
-        ),
-      ),
+      drawer: CommonDrawer(),
       appBar: AppBar(
         title: Text("home page"),
       ),
@@ -54,6 +42,58 @@ class _HomePageState extends State<HomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class CommonDrawer extends StatelessWidget {
+  const CommonDrawer({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          UserAccountsDrawerHeader(
+            accountName: Text('iblurblur .dev'),
+            accountEmail: Text('iblurblur@gmail.com'),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: NetworkImage(
+                'https://miro.medium.com/fit/c/160/160/1*nE4OFcqk2kx2-Lzhey8QKA.png',
+              ),
+            ),
+            decoration: BoxDecoration(
+              gradient: BackGroundTheme.gradient,
+            ),
+          ),
+          ...MenuViewModel()
+              .items
+              .map(
+                (e) => ListTile(
+                  onTap: (){
+                    e.onTap(context);
+                  },
+                  leading: Icon(
+                    e.icon,
+                    color: e.iconColor,
+                  ),
+                  title: Text(e.title),
+                ),
+              )
+              .toList(),
+          Spacer(),
+          ListTile(
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, AppRoute.loginRoute, (route) => false);
+            },
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+          ),
+        ],
       ),
     );
   }
