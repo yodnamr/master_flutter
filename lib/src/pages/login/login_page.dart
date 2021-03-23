@@ -86,9 +86,19 @@ class LoginPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text('login button'),
+                _buildTextButton(
+                  'forgot password?',
+                  onPressed: () {
+                    //todo
+                  },
+                ),
                 Text('forgot password'),
-                Text('sso'),
+                _buildTextButton(
+                  'register',
+                  onPressed: () {
+                    //todo
+                  },
+                ),
               ],
             ),
           ),
@@ -124,4 +134,18 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+
+  Container _buildTextButton(String text, {VoidCallback onPressed}) => Container(
+      margin: EdgeInsets.symmetric(vertical: 12),
+      width: double.infinity,
+      child: TextButton(
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white70,
+          ),
+        ),
+      ),
+    );
 }
