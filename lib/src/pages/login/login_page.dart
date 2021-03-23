@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/pages/login/background_theme.dart';
+import 'package:my_stock/src/view_models/sso_viewmodel.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -92,7 +94,7 @@ class LoginPage extends StatelessWidget {
                     //todo
                   },
                 ),
-                Text('forgot password'),
+                SSOButton(),
                 _buildTextButton(
                   'register',
                   onPressed: () {
@@ -135,17 +137,47 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Container _buildTextButton(String text, {VoidCallback onPressed}) => Container(
-      margin: EdgeInsets.symmetric(vertical: 12),
-      width: double.infinity,
-      child: TextButton(
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white70,
+  Container _buildTextButton(String text, {VoidCallback onPressed}) =>
+      Container(
+        margin: EdgeInsets.symmetric(vertical: 12),
+        width: double.infinity,
+        child: TextButton(
+          onPressed: onPressed,
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white70,
+            ),
           ),
         ),
+      );
+}
+
+class SSOButton extends StatelessWidget {
+  const SSOButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 22),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: SSOViewModel()
+            .item
+            .map(
+              (item) => FloatingActionButton(
+                onPressed: item.onPressed,
+                child: FaIcon(
+                  item.icon,
+                  color: item.iconColor,
+                ),
+                backgroundColor: item.backgroundColor,
+              ),
+            )
+            .toList(),
       ),
     );
+  }
 }
