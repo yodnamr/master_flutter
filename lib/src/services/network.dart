@@ -5,10 +5,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:my_stock/src/constants/api.dart';
 import 'package:my_stock/src/models/product_response.dart';
 
-class Cat {
-  walk() {}
-}
-
 class NetworkService {
   NetworkService._internal();
 

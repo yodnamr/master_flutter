@@ -10,7 +10,12 @@ import 'package:my_stock/src/services/network.dart';
 import 'package:my_stock/src/view_models/menu_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,25 +36,33 @@ class HomePage extends StatelessWidget {
           if(snapshot.hasError){
             return Text(snapshot.error.toString());
           }
+
           final productList = snapshot.data;
-          return GridView.builder(
-            padding: EdgeInsets.all(4),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.8,
-              mainAxisSpacing: 4,
-              crossAxisSpacing: 4,
-            ),
-            itemBuilder: (context, index) => LayoutBuilder(
-              builder: (context, constraint) => ShopListItem(
-                constraint.maxHeight,
-                productList[index],
-                press: () {
-                  print('click!!!');
-                },
+          return RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+
+              });
+            },
+            child: GridView.builder(
+              padding: EdgeInsets.all(4),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.8,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
               ),
+              itemBuilder: (context, index) => LayoutBuilder(
+                builder: (context, constraint) => ShopListItem(
+                  constraint.maxHeight,
+                  productList[index],
+                  press: () {
+                    print('click!!!');
+                  },
+                ),
+              ),
+              itemCount: productList.length,
             ),
-            itemCount: productList.length,
           );
         },
       ),
