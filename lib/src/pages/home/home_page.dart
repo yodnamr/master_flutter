@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/configs/app_route.dart';
+import 'package:my_stock/src/constants/api.dart';
 import 'package:my_stock/src/constants/app_setting.dart';
 import 'package:my_stock/src/constants/asset.dart';
+import 'package:my_stock/src/models/product_response.dart';
 import 'package:my_stock/src/pages/login/background_theme.dart';
+import 'package:my_stock/src/services/network.dart';
 import 'package:my_stock/src/view_models/menu_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,24 +14,44 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       drawer: CommonDrawer(),
       appBar: AppBar(
         title: Text("home page"),
       ),
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.8,
-        ),
-        itemBuilder: (context, index) => LayoutBuilder(
-          builder: (context, constraint) => ShopListItem(
-            constraint.maxHeight,
-            press: () {
-              print('click!!!');
-            },
-          ),
-        ),
-        itemCount: 100,
+      body: FutureBuilder<List<ProductResponse>>(
+        future: NetworkService().productAll(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if(snapshot.hasError){
+            return Text(snapshot.error.toString());
+          }
+          final productList = snapshot.data;
+          return GridView.builder(
+            padding: EdgeInsets.all(4),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.8,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+            ),
+            itemBuilder: (context, index) => LayoutBuilder(
+              builder: (context, constraint) => ShopListItem(
+                constraint.maxHeight,
+                productList[index],
+                press: () {
+                  print('click!!!');
+                },
+              ),
+            ),
+            itemCount: productList.length,
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -103,8 +126,9 @@ class CommonDrawer extends StatelessWidget {
 class ShopListItem extends StatelessWidget {
   final Function press;
   final double maxHeight;
+  final ProductResponse product;
 
-  const ShopListItem(this.maxHeight, {Key key, this.press}) : super(key: key);
+  const ShopListItem(this.maxHeight,this.product, {Key key, this.press}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +155,7 @@ class ShopListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'MacBook M1',
+              product.name,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
@@ -139,13 +163,13 @@ class ShopListItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  '\$ 30,000',
+                  '\$ ${product.price}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  '1,112 pieces',
+                  '${product.stock} pieces',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.deepOrangeAccent,
@@ -158,13 +182,13 @@ class ShopListItem extends StatelessWidget {
       );
 
   Stack _buildImage() {
-    final height = maxHeight * 0.78;
-    final productImage = '';
+    final height = maxHeight * 0.7;
+    final productImage = product.image;
     return Stack(
       children: [
         productImage != null && productImage.isNotEmpty
             ? Image.network(
-                productImage,
+                '${API.IMAGE_URL}/$productImage',
                 height: height,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -174,7 +198,7 @@ class ShopListItem extends StatelessWidget {
                 height: height,
                 width: double.infinity,
               ),
-        if (0 <= 0)
+        if (product.stock <= 0)
           Positioned(
             top: 1,
             right: 1,
