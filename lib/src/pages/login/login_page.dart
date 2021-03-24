@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/configs/app_route.dart';
+import 'package:my_stock/src/constants/asset.dart';
 import 'package:my_stock/src/pages/login/background_theme.dart';
 import 'package:my_stock/src/view_models/sso_viewmodel.dart';
 
@@ -26,7 +27,7 @@ class LoginPage extends StatelessWidget {
               children: [
                 SizedBox(height: 62),
                 Image.asset(
-                  'assets/images/logo.png',
+                  Asset.logoImage,
                   width: 320,
                 ),
                 SizedBox(height: 32),
