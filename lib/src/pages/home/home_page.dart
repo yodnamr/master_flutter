@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/configs/app_route.dart';
+import 'package:my_stock/src/constants/app_setting.dart';
 import 'package:my_stock/src/constants/asset.dart';
 import 'package:my_stock/src/pages/login/background_theme.dart';
 import 'package:my_stock/src/view_models/menu_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -78,9 +80,16 @@ class CommonDrawer extends StatelessWidget {
               .toList(),
           Spacer(),
           ListTile(
-            onTap: () {
+            onTap: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              // prefs.clear();
+              prefs.remove(AppSetting.tokenSetting);
+
               Navigator.pushNamedAndRemoveUntil(
-                  context, AppRoute.loginRoute, (route) => false);
+                context,
+                AppRoute.loginRoute,
+                (route) => false,
+              );
             },
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
@@ -165,37 +174,37 @@ class ShopListItem extends StatelessWidget {
                 height: height,
                 width: double.infinity,
               ),
-        if(0 <= 0)
-             Positioned(
-                top: 1,
-                right: 1,
-                child: Card(
-                  color: Colors.white70,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+        if (0 <= 0)
+          Positioned(
+            top: 1,
+            right: 1,
+            child: Card(
+              color: Colors.white70,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      FontAwesomeIcons.box,
+                      size: 15.0,
+                      color: Colors.black,
                     ),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          FontAwesomeIcons.box,
-                          size: 15.0,
-                          color: Colors.black,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          'out of stock',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    SizedBox(width: 4),
+                    Text(
+                      'out of stock',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
+            ),
+          ),
       ],
     );
   }
