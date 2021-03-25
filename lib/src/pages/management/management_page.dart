@@ -30,6 +30,11 @@ class _ManagementPageState extends State<ManagementPage> {
 
   @override
   Widget build(BuildContext context) {
+    Object arguments = ModalRoute.of(context).settings.arguments;
+    if (arguments is ProductResponse) {
+      _product = arguments;
+    }
+
     return Scaffold(
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
@@ -78,6 +83,7 @@ class _ManagementPageState extends State<ManagementPage> {
       );
 
   TextFormField _buildNameInput() => TextFormField(
+        initialValue: _product.name ?? "",
         decoration: inputStyle(label: "name"),
         onSaved: (String value) {
           _product.name = value;
@@ -85,6 +91,7 @@ class _ManagementPageState extends State<ManagementPage> {
       );
 
   TextFormField _buildPriceInput() => TextFormField(
+        initialValue: _product.price == null ? '0' : _product.price.toString(),
         decoration: inputStyle(label: "price"),
         keyboardType: TextInputType.number,
         onSaved: (String value) {
@@ -93,6 +100,7 @@ class _ManagementPageState extends State<ManagementPage> {
       );
 
   TextFormField _buildStockInput() => TextFormField(
+        initialValue: _product.stock == null ? '0' : _product.stock.toString(),
         decoration: inputStyle(label: "stock"),
         keyboardType: TextInputType.number,
         onSaved: (String value) {
