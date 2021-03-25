@@ -34,16 +34,14 @@ class _HomePageState extends State<HomePage> {
             );
           }
 
-          if(snapshot.hasError){
+          if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
 
           final productList = snapshot.data;
           return RefreshIndicator(
             onRefresh: () async {
-              setState(() {
-
-              });
+              setState(() {});
             },
             child: GridView.builder(
               padding: EdgeInsets.all(4),
@@ -57,8 +55,13 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, constraint) => ShopListItem(
                   constraint.maxHeight,
                   productList[index],
-                  press: () {
-                    Navigator.pushNamed(context, AppRoute.managementRoute, arguments: productList[index]);
+                  press: () async {
+                    await Navigator.pushNamed(
+                      context,
+                      AppRoute.managementRoute,
+                      arguments: productList[index],
+                    );
+                    setState(() {});
                   },
                 ),
               ),
@@ -73,9 +76,7 @@ class _HomePageState extends State<HomePage> {
             context,
             AppRoute.managementRoute,
           );
-          setState(() {
-
-          });
+          setState(() {});
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
@@ -148,7 +149,8 @@ class ShopListItem extends StatelessWidget {
   final double maxHeight;
   final ProductResponse product;
 
-  const ShopListItem(this.maxHeight,this.product, {Key key, this.press}) : super(key: key);
+  const ShopListItem(this.maxHeight, this.product, {Key key, this.press})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

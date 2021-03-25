@@ -33,6 +33,7 @@ class _ManagementPageState extends State<ManagementPage> {
     Object arguments = ModalRoute.of(context).settings.arguments;
     if (arguments is ProductResponse) {
       _product = arguments;
+      _editMode = true;
     }
 
     return Scaffold(
@@ -117,13 +118,24 @@ class _ManagementPageState extends State<ManagementPage> {
               _form.currentState.save();
               FocusScope.of(context).requestFocus(FocusNode());
               if (_editMode) {
-                //todo
+                try {
+                  final message =
+                      await NetworkService().editProduct(null, _product);
+                  Navigator.pop(context);
+                  showAlertBar(message);
+                } catch (ex) {
+                  showAlertBar(
+                    ex.toString(),
+                    color: Colors.red,
+                    icon: FontAwesomeIcons.cross,
+                  );
+                }
               } else {
                 try {
                   final message =
                       await NetworkService().addProduct(null, _product);
-                  // showAlertBar(message);
                   Navigator.pop(context);
+                  showAlertBar(message);
                 } catch (ex) {
                   showAlertBar(
                     ex.toString(),
