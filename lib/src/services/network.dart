@@ -66,6 +66,7 @@ class NetworkService {
 
     final response = await _dio.post(API.PRODUCT, data: data);
 
+    print(response.statusCode);
     if (response.statusCode == 201) {
       return 'Add Successfully';
     }
