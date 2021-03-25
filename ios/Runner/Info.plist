@@ -41,5 +41,21 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+
+<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+</dict>
+
+	   <key>NSCameraUsageDescription</key>
+       <string>Used to demonstrate image picker plugin</string>
+       <key>NSPhotoLibraryUsageDescription</key>
+       <string>Used to demonstrate image picker plugin</string>
+
+
+
+
 </dict>
 </plist>
