@@ -65,7 +65,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     )
                   ],
                 ),
-                ProductImage(callback, image: null)
+                ProductImage(callback, image: _product.image)
               ],
             ),
           ),
