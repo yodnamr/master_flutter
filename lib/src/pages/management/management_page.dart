@@ -29,6 +29,10 @@ class _ManagementPageState extends State<ManagementPage> {
     super.initState();
   }
 
+  callback(File image){
+    _image = image;
+  }
+
   @override
   Widget build(BuildContext context) {
     Object arguments = ModalRoute.of(context).settings.arguments;
@@ -61,7 +65,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     )
                   ],
                 ),
-                ProductImage(null, image: null)
+                ProductImage(callback, image: null)
               ],
             ),
           ),
@@ -122,7 +126,7 @@ class _ManagementPageState extends State<ManagementPage> {
               if (_editMode) {
                 try {
                   final message =
-                      await NetworkService().editProduct(null, _product);
+                      await NetworkService().editProduct(_image, _product);
                   Navigator.pop(context);
                   showAlertBar(message);
                 } catch (ex) {
@@ -135,7 +139,7 @@ class _ManagementPageState extends State<ManagementPage> {
               } else {
                 try {
                   final message =
-                      await NetworkService().addProduct(null, _product);
+                      await NetworkService().addProduct(_image, _product);
                   Navigator.pop(context);
                   showAlertBar(message);
                 } catch (ex) {
@@ -286,17 +290,15 @@ class _ProductImageState extends State<ProductImage> {
   }
 
   void _pickImage(ImageSource source) {
-    _picker
-        .getImage(
+    _picker.getImage(
       source: source,
       imageQuality: 70,
       maxHeight: 500,
       maxWidth: 500,
-    )
-        .then((file) {
+    ).then((file) {
       if (file != null) {
         setState(() {
-
+          _imageFile = File(file.path);
           _image = null;
           widget.callBack(_imageFile);
         });
