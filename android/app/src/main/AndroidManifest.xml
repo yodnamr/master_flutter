@@ -1,6 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.codemobiles.my_stock">
+
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
+
    <application
+        android:usesCleartextTraffic="true"
         android:label="my_stock"
         android:icon="@mipmap/ic_launcher">
         <activity

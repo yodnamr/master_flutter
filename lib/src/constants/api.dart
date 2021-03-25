@@ -1,5 +1,5 @@
 class API {
-  static const String BASE_URL = 'https://d92e1eb74350.jp.ngrok.io';
+  static const String BASE_URL = 'http://192.168.0.175:1150';
   static const String IMAGE_URL = '$BASE_URL/images';
   static const String PRODUCT = '/products';
 }
