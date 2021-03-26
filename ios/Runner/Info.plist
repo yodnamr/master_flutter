@@ -55,6 +55,10 @@
        <string>Used to demonstrate image picker plugin</string>
 
 
+<key>NSLocationAlwaysUsageDescription</key>
+	<string>Needed to access location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Needed to access location</string>
 
 
 </dict>

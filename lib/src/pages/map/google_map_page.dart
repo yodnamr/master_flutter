@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:my_stock/src/constants/asset.dart';
 
 class GoogleMapPage extends StatefulWidget {
@@ -22,8 +23,12 @@ class GoogleMapPageState extends State<GoogleMapPage> {
   final dummyData = List<LatLng>();
   final _marker = Set<Marker>();
 
+  bool _permissionGranted;
+
   @override
   void initState() {
+    _permissionGranted = false;
+    _requestLocationPermission();
     dummyData.add(LatLng(13.746774, 100.5326445));
     dummyData.add(LatLng(13.728223, 100.532949));
     dummyData.add(LatLng(13.69725, 100.5131413));
@@ -47,6 +52,8 @@ class GoogleMapPageState extends State<GoogleMapPage> {
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
+            myLocationButtonEnabled: _permissionGranted,
+            myLocationEnabled: _permissionGranted,
           ),
           Positioned(
             left: 6,
@@ -125,5 +132,17 @@ class GoogleMapPageState extends State<GoogleMapPage> {
     );
 
     _marker.add(marker);
+  }
+
+  void _requestLocationPermission() async {
+    try {
+      _permissionGranted =
+          await Location().requestPermission() == PermissionStatus.granted;
+      setState(() {});
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        return print('Permission denied');
+      }
+    }
   }
 }
