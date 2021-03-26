@@ -56,7 +56,33 @@ class _PostListState extends State<PostList> {
   Widget build(BuildContext context) {
     return BlocBuilder<PostBloc, PostState>(
       builder: (context, state) {
+        if (state is PostFailure) {
+          return Center(
+            child: Text('failed to fetch posts'),
+          );
+        }
+        if (state is PostSuccess) {
+          if (state.posts.isEmpty) {
+            return Center(
+              child: Text('no posts'),
+            );
+          }
+          return ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return index >= state.posts.length
+                  ? BottomLoader()
+                  : PostWidget(post: state.posts[index]);
+            },
+            itemCount: state.hasReachedMax
+                ? state.posts.length
+                : state.posts.length + 1,
+            controller: _scrollController,
+          );
+        }
 
+        return Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }
