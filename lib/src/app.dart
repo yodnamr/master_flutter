@@ -19,9 +19,6 @@ class App extends StatelessWidget {
       home: FutureBuilder<SharedPreferences>(
         future: SharedPreferences.getInstance(),
         builder: (context, snapshot) {
-
-          return GoogleMapPage();
-
           if (!snapshot.hasData) {
             return Container(
               color: Colors.white,

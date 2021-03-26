@@ -26,15 +26,18 @@ class GoogleMapPageState extends State<GoogleMapPage> {
 
   @override
   void initState() {
-    dummyData.add(LatLng(13.746774,100.5326445));
-    dummyData.add(LatLng(13.728223,100.532949));
-    dummyData.add(LatLng(13.69725,100.5131413));
+    dummyData.add(LatLng(13.746774, 100.5326445));
+    dummyData.add(LatLng(13.728223, 100.532949));
+    dummyData.add(LatLng(13.69725, 100.5131413));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        title: Text('Google Map'),
+      ),
       body: GoogleMap(
         markers: _marker,
         mapType: MapType.hybrid,
