@@ -38,23 +38,33 @@ class GoogleMapPageState extends State<GoogleMapPage> {
       appBar: AppBar(
         title: Text('Google Map'),
       ),
-      body: GoogleMap(
-        markers: _marker,
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
+      body: Stack(
+        children: [
+          GoogleMap(
+            markers: _marker,
+            mapType: MapType.hybrid,
+            initialCameraPosition: _kGooglePlex,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          ),
+          Positioned(
+            left: 6,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.purple,
+              ),
+              onPressed: _pinMarker,
+              label: Text('Pin Biker'),
+              icon: Icon(Icons.pin_drop),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Future<void> _goToTheLake() async {
+  Future<void> _pinMarker() async {
     dummyData.forEach((element) {
       final marker = Marker(
         markerId: MarkerId(element.toString()),
