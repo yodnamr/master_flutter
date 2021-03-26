@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:my_stock/src/constants/api.dart';
+import 'package:my_stock/src/models/post.dart';
 import 'package:my_stock/src/models/product_response.dart';
 
 class NetworkService {
@@ -93,6 +94,7 @@ class NetworkService {
     }
     throw Exception('Network failed');
   }
+
 //
 // Future<String> deleteProduct(int id) async {
 //   final response = await _dio.delete('${API.PRODUCT}/$id');
@@ -103,14 +105,14 @@ class NetworkService {
 //   throw Exception('Network failed');
 // }
 //
-// Future<List<Posts>> fetchPosts(int startIndex, {int limit = 10}) async {
-//   final url =
-//       'https://jsonplaceholder.typicode.com/posts?_start=$startIndex&_limit=$limit';
-//
-//   final Response response = await _dio.get(url);
-//   if (response.statusCode == 200) {
-//     return postsFromJson(jsonEncode(response.data));
-//   }
-//   throw Exception('Network failed');
-// }
+  Future<List<Post>> fetchPosts(int startIndex, {int limit = 10}) async {
+    final url =
+        'https://jsonplaceholder.typicode.com/posts?_start=$startIndex&_limit=$limit';
+
+    final Response response = await _dio.get(url);
+    if (response.statusCode == 200) {
+      return postFromJson(jsonEncode(response.data));
+    }
+    throw Exception('Network failed');
+  }
 }
