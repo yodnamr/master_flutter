@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:my_stock/src/constants/asset.dart';
 
 class GoogleMapPage extends StatefulWidget {
   @override
@@ -65,14 +69,65 @@ class GoogleMapPageState extends State<GoogleMapPage> {
   }
 
   Future<void> _pinMarker() async {
-    dummyData.forEach((element) {
-      final marker = Marker(
-        markerId: MarkerId(element.toString()),
-        position: element,
+    _marker?.clear();
+    for (var latLng in dummyData) {
+      await _addMarker(
+        latLng,
+        title: "xx",
+        snippet: "yy",
+        isShowInfo: true,
       );
-      _marker.add(marker);
-    });
-
+    }
     setState(() {});
+  }
+
+  Future<Uint8List> getBytesFromAsset(String path, double height) async {
+    final byteData = await rootBundle.load(path);
+    final codec = await instantiateImageCodec(
+      byteData.buffer.asUint8List(),
+      targetHeight: height.toInt(),
+    );
+    final frameInfo = await codec.getNextFrame();
+    final image = await frameInfo.image.toByteData(format: ImageByteFormat.png);
+    return image.buffer.asUint8List();
+  }
+
+  Future<void> _addMarker(
+    LatLng position, {
+    String title = 'none',
+    String snippet = 'none',
+    String pinAsset = Asset.pinBikerImage,
+    bool isShowInfo = false,
+  }) async {
+    final byteData = await getBytesFromAsset(
+      pinAsset,
+      MediaQuery.of(context).size.height * 0.2,
+    );
+
+    final bitmapDescriptor = BitmapDescriptor.fromBytes(byteData);
+
+    final marker = Marker(
+      // important. unique id
+      markerId: MarkerId(position.toString()),
+      position: position,
+      infoWindow: isShowInfo
+          ? InfoWindow(
+              title: title,
+              snippet: snippet,
+              onTap: () {
+                // _launchMaps(
+                //   position.latitude,
+                //   position.longitude,
+                // );
+              },
+            )
+          : null,
+      icon: bitmapDescriptor,
+      onTap: () {
+        print('lat: ${position.latitude}, lng: ${position.longitude}');
+      },
+    );
+
+    _marker.add(marker);
   }
 }
